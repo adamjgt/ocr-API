@@ -14,3 +14,7 @@ async def ocr_endpoint(file: UploadFile = File(...)):
         return OcrResponse(text=text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/health")
+def health_check():
+    return {"status": "ok"}
