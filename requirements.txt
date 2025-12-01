@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pydantic
+pytesseract
+python-multipart
+gunicorn
