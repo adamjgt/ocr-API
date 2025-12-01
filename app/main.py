@@ -15,3 +15,4 @@ def create_app() -> FastAPI:
     app.add_exception_handler(Exception, generic_error_handler)
 
     return app
+app = create_app()
