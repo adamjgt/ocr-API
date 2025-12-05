@@ -4,3 +4,4 @@ pydantic
 pytesseract
 python-multipart
 gunicorn
+pdf2image
