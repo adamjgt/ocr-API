@@ -5,3 +5,11 @@ pytesseract
 python-multipart
 gunicorn
 pdf2image
+redis
+rq
+loguru
+pydantic-settings
+slowapi
+pytest
+pytest-asyncio
+httpx
