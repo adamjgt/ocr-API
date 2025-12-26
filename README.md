@@ -262,6 +262,7 @@ uvicorn app.main:app --reload
 
 # Terminal 2: Start RQ worker
 rq worker --url redis://localhost:6379 default
+python -m app.worker #windows
 ```
 
 ### Run Tests
