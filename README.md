@@ -1,6 +1,6 @@
 # OCR Processing API
 
-[![CI/CD Pipeline](https://github.com/YOUR_USERNAME/API-project/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/API-project/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://github.com/adamjgt/API-project/actions/workflows/ci.yml/badge.svg)](https://github.com/adamjgt/API-project/actions/workflows/ci.yml)
 
 Production-ready OCR API with async job queue processing using Redis and RQ.
 
