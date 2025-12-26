@@ -1,6 +1,7 @@
 import os
 from pydantic_settings import BaseSettings
 from functools import lru_cache
+from typing import Optional
 
 
 class Settings(BaseSettings):
@@ -51,9 +52,10 @@ class Settings(BaseSettings):
         env_file_encoding = "utf-8"
 
 
-@lru_cache()
 def get_settings() -> Settings:
+    """Get settings instance. Not cached during testing."""
     return Settings()
 
 
+# Create settings instance at module load
 settings = get_settings()

@@ -33,26 +33,23 @@ def mock_queue():
 
 @pytest.fixture(scope="function")
 def client(mock_redis_connection, mock_queue):
-    """Test client with mocked Redis and API key auth."""
+    """Test client with mocked Redis."""
+    # Create mock redis client instance
+    mock_redis_instance = MagicMock()
+    mock_redis_instance.is_connected.return_value = True
+    mock_redis_instance.connection = mock_redis_connection
+    mock_redis_instance.queue = mock_queue
+    
     with patch("app.core.redis_client.RedisClient") as MockRedisClient:
-        mock_instance = MagicMock()
-        mock_instance.is_connected.return_value = True
-        mock_instance.connection = mock_redis_connection
-        mock_instance.queue = mock_queue
-        MockRedisClient.return_value = mock_instance
+        MockRedisClient.return_value = mock_redis_instance
         
-        # Patch Redis client globally
-        with patch("app.core.redis_client.redis_client", mock_instance):
-            with patch("app.api.v1.routes.redis_client", mock_instance):
-                with patch("app.services.job_service.redis_client", mock_instance):
-                    # Mock API key validation to always return True for TEST_API_KEY
-                    with patch("app.core.auth.validate_api_key_from_redis") as mock_validate:
-                        mock_validate.return_value = True
-                        
-                        from app.main import create_app
-                        app = create_app()
-                        with TestClient(app) as test_client:
-                            yield test_client
+        with patch("app.core.redis_client.redis_client", mock_redis_instance):
+            with patch("app.api.v1.routes.redis_client", mock_redis_instance):
+                with patch("app.services.job_service.redis_client", mock_redis_instance):
+                    from app.main import create_app
+                    app = create_app()
+                    with TestClient(app) as test_client:
+                        yield test_client
 
 
 @pytest.fixture

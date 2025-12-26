@@ -45,6 +45,8 @@ jobs:
       env:
         REDIS_URL: redis://localhost:6379
         ENV: testing
+        API_KEY_ENABLED: "false"
+        RATE_LIMIT_ENABLED: "false"
       run: |
         pytest test/ -v --tb=short
 
