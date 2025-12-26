@@ -7,6 +7,12 @@ import os
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# IMPORTANT: Import modules BEFORE patching - required for CI environment
+# This ensures the modules are loaded so patch() can find the attributes
+from app.core import redis_client as redis_client_module
+from app.api.v1 import routes as routes_module
+from app.services import job_service as job_service_module
+
 # Test API key for testing
 TEST_API_KEY = "test-api-key-for-testing-12345"
 
@@ -40,16 +46,14 @@ def client(mock_redis_connection, mock_queue):
     mock_redis_instance.connection = mock_redis_connection
     mock_redis_instance.queue = mock_queue
     
-    with patch("app.core.redis_client.RedisClient") as MockRedisClient:
-        MockRedisClient.return_value = mock_redis_instance
-        
-        with patch("app.core.redis_client.redis_client", mock_redis_instance):
-            with patch("app.api.v1.routes.redis_client", mock_redis_instance):
-                with patch("app.services.job_service.redis_client", mock_redis_instance):
-                    from app.main import create_app
-                    app = create_app()
-                    with TestClient(app) as test_client:
-                        yield test_client
+    # Use patch.object() instead of patch() with string for more reliable patching
+    with patch.object(redis_client_module, 'redis_client', mock_redis_instance):
+        with patch.object(routes_module, 'redis_client', mock_redis_instance):
+            with patch.object(job_service_module, 'redis_client', mock_redis_instance):
+                from app.main import create_app
+                app = create_app()
+                with TestClient(app) as test_client:
+                    yield test_client
 
 
 @pytest.fixture
