@@ -10,6 +10,7 @@ rq
 loguru
 pydantic-settings
 slowapi
+email-validator
 pytest
 pytest-asyncio
 httpx
